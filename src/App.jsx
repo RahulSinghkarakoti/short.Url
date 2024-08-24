@@ -72,7 +72,7 @@ function App() {
     }, 2000);
   };
   return (
-    <div className="bg-white dark:bg-zinc-950 text-black dark:text-white h-[100vh]">
+    <div className="bg-white dark:bg-zinc-950 text-black dark:text-white h-full">
       <div className="sm:fixed sm:top-2 ">
         <Navbar /> 
       </div>
@@ -148,7 +148,7 @@ function App() {
                 level={"H"} // QR code error correction level ("L", "M", "Q", "H")
                 // includeMargin={true} // Include margins around the QR code
               />
-              <div className="m-2 p-2 rounded-xl sm:text-2xl  flex justify-between items-center bg-green-200  border border-[#3C3D37]  sm:w-1/2  w-full">
+              <div className="m-2 p-2 rounded-xl sm:text-2xl  flex justify-between items-center bg-green-200 dark:text-black border border-[#3C3D37]  sm:w-1/2  w-full">
                 <h1>{result}</h1>
                 <MdContentCopy
                   className="sm:text-3xl text-xl cursor-pointer "

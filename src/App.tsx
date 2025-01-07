@@ -1,17 +1,17 @@
-import { useState } from "react"; 
+import React, { ChangeEvent, FC, FormEvent, useState } from "react";
 import "./App.css";
 import { Navbar } from "./components";
 import axios from "axios";
 import QRCode from "qrcode.react";
-import { MdContentCopy } from "react-icons/md"; 
+import { MdContentCopy } from "react-icons/md";
 
-function App() {
+const App: FC = () => {
   const [limit, setLimit] = useState(200);
   const [result, setResult] = useState("");
   const [showPopup, setShowPopUp] = useState(false);
   const [message, setMessage] = useState("");
 
-  function isValidUrl(string) {
+  function isValidUrl(string: string) {
     try {
       new URL(string);
       return true;
@@ -20,28 +20,30 @@ function App() {
     }
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.currentTarget);
     const linkValue = formData.get("link");
     const aliasValue = formData.get("alias");
-    if (isValidUrl(linkValue)) {
-      apiCall(linkValue, aliasValue);
-    } else {
-      setMessage("Invalid URL");
-      setShowPopUp(true);
-      setTimeout(() => {
-        setShowPopUp(false);
-        setMessage("");
-      }, 2000);
+    if (typeof linkValue === "string" && typeof aliasValue === "string") {
+      if (isValidUrl(linkValue )) {
+        apiCall(linkValue, aliasValue);
+      } else {
+        setMessage("Invalid URL");
+        setShowPopUp(true);
+        setTimeout(() => {
+          setShowPopUp(false);
+          setMessage("");
+        }, 2000);
+      }
     }
   };
 
-  const apiCall = (link, alias) => {
+  const apiCall = (link: string, alias: string) => {
     const data = {
       url: link,
       alias: alias,
-      "max-clicks": "200",
+      "max-clicks": limit,
     };
 
     axios
@@ -72,9 +74,9 @@ function App() {
     }, 2000);
   };
   return (
-    <div className="bg-white dark:bg-zinc-950 text-black dark:text-white h-full">
+    <div className="bg-white dark:bg-zinc-950 text-black dark:text-white min-h-screen">
       <div className="sm:fixed sm:top-2 ">
-        <Navbar /> 
+        <Navbar />
       </div>
       <div className=" pt-20 ">
         <div className="text-center space-y-4 p-4  flex flex-col justify-center items-center">
@@ -104,7 +106,7 @@ function App() {
               Paste a Long Link*
             </label>
             <input
-              required="true"
+              required={true}
               name="link"
               id="link"
               type="text"
@@ -114,7 +116,10 @@ function App() {
           </div>
           <div className="flex  items-center gap-2  justify-between ">
             <div className="flex flex-col w-1/2 ">
-              <label htmlFor="link" className="font-bold sm:text-xl text-sm m-1">
+              <label
+                htmlFor="link"
+                className="font-bold sm:text-xl text-sm m-1"
+              >
                 Customize your link
               </label>
               <input
@@ -136,7 +141,9 @@ function App() {
                 max={200}
                 value={limit}
                 className="  p-3 cursor-pointer"
-                onChange={(e) => setLimit(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setLimit(Number(e.target.value))
+                }
               />
             </div>
           </div>
@@ -168,6 +175,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
